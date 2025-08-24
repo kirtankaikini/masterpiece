@@ -1,0 +1,474 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Masterpiece Routine - Study Timetable</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            padding: 20px;
+            color: #2c3e50;
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 210mm;
+            margin: 0 auto;
+            background: white;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            border-radius: 12px;
+            overflow: hidden;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            text-align: center;
+            padding: 30px 20px;
+            position: relative;
+        }
+        
+        .header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grid" width="10" height="10" patternUnits="userSpaceOnUse"><path d="M 10 0 L 0 0 0 10" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="1"/></pattern></defs><rect width="100" height="100" fill="url(%23grid)"/></svg>');
+            opacity: 0.3;
+        }
+        
+        .header-content {
+            position: relative;
+            z-index: 1;
+        }
+        
+        .main-title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 8px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+        
+        .subtitle {
+            font-size: 1.1rem;
+            font-weight: 300;
+            opacity: 0.9;
+            letter-spacing: 1px;
+        }
+        
+        .content {
+            padding: 30px;
+        }
+        
+        .day-section {
+            margin-bottom: 40px;
+        }
+        
+        .day-title {
+            background: linear-gradient(90deg, #4facfe 0%, #00f2fe 100%);
+            color: white;
+            padding: 15px 20px;
+            font-size: 1.3rem;
+            font-weight: 600;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            text-align: center;
+            box-shadow: 0 4px 15px rgba(79, 172, 254, 0.3);
+        }
+        
+        .timetable {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+        }
+        
+        .timetable thead {
+            background: linear-gradient(90deg, #56ab2f 0%, #a8e6cf 100%);
+            color: white;
+        }
+        
+        .timetable th {
+            padding: 15px 12px;
+            font-weight: 600;
+            font-size: 1rem;
+            text-align: left;
+            letter-spacing: 0.5px;
+        }
+        
+        .timetable td {
+            padding: 12px;
+            border-bottom: 1px solid #e8f4f8;
+            font-size: 0.9rem;
+            vertical-align: top;
+        }
+        
+        .time-col {
+            width: 15%;
+            font-weight: 600;
+            color: #2c3e50;
+            background: #f8fafc;
+        }
+        
+        .activity-col {
+            width: 50%;
+            font-weight: 500;
+            color: #2c3e50;
+        }
+        
+        .notes-col {
+            width: 35%;
+            color: #546e7a;
+            font-style: italic;
+            font-size: 0.85rem;
+        }
+        
+        .break-row {
+            background: linear-gradient(90deg, #fff7e6, #ffe4b5);
+        }
+        
+        .study-row {
+            background: linear-gradient(90deg, #e8f5e8, #f0fff0);
+        }
+        
+        .workout-row {
+            background: linear-gradient(90deg, #ffe8e8, #fff0f0);
+        }
+        
+        .trading-row {
+            background: linear-gradient(90deg, #e8f4ff, #f0f8ff);
+        }
+        
+        .timetable tbody tr:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+        }
+        
+        .highlight {
+            background: linear-gradient(90deg, #ffd89b 0%, #19547b 100%);
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-weight: 600;
+        }
+        
+        .quote-section {
+            margin-top: 40px;
+            text-align: center;
+            padding: 25px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-radius: 10px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .quote-section::before {
+            content: '"';
+            font-size: 4rem;
+            position: absolute;
+            top: -10px;
+            left: 20px;
+            opacity: 0.3;
+            font-family: Georgia, serif;
+        }
+        
+        .quote-text {
+            font-size: 1.2rem;
+            font-weight: 500;
+            font-style: italic;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .stats-section {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            margin: 30px 0;
+        }
+        
+        .stat-card {
+            text-align: center;
+            padding: 20px;
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            color: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(240, 147, 251, 0.3);
+        }
+        
+        .stat-number {
+            font-size: 2rem;
+            font-weight: 700;
+            display: block;
+        }
+        
+        .stat-label {
+            font-size: 0.9rem;
+            opacity: 0.9;
+            margin-top: 5px;
+        }
+        
+        @media print {
+            body {
+                background: white;
+                padding: 0;
+            }
+            
+            .container {
+                box-shadow: none;
+                border-radius: 0;
+                max-width: none;
+            }
+            
+            .timetable tbody tr:hover {
+                transform: none;
+                box-shadow: none;
+            }
+        }
+        
+        @page {
+            size: A4;
+            margin: 0.5in;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="header-content">
+                <h1 class="main-title">🌟 Masterpiece Routine</h1>
+                <p class="subtitle">Designed for Focus, Balance & Discipline</p>
+            </div>
+        </div>
+        
+        <div class="content">
+            <div class="stats-section">
+                <div class="stat-card">
+                    <span class="stat-number">3-4</span>
+                    <span class="stat-label">Study Hrs/Day</span>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-number">NY</span>
+                    <span class="stat-label">Trading Session</span>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-number">90%+</span>
+                    <span class="stat-label">ICSE Target</span>
+                </div>
+            </div>
+            
+            <!-- Sunday Schedule -->
+            <div class="day-section">
+                <div class="day-title">🌅 SUNDAY SCHEDULE</div>
+                <table class="timetable">
+                    <thead>
+                        <tr>
+                            <th>Time</th>
+                            <th>Activity</th>
+                            <th>Notes</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="time-col">5:30 AM</td>
+                            <td class="activity-col">Wake up</td>
+                            <td class="notes-col">2 glasses warm water + almonds</td>
+                        </tr>
+                        <tr class="workout-row">
+                            <td class="time-col">5:40 - 6:10 AM</td>
+                            <td class="activity-col">🏋️ Full Body Workout</td>
+                            <td class="notes-col">Full body + abs + stretches</td>
+                        </tr>
+                        <tr>
+                            <td class="time-col">6:10 - 6:50 AM</td>
+                            <td class="activity-col">🛁 Bath + Sandhyavandan</td>
+                            <td class="notes-col">Spiritual practice & cleansing</td>
+                        </tr>
+                        <tr class="study-row">
+                            <td class="time-col">6:50 - 8:30 AM</td>
+                            <td class="activity-col">📚 Self-Study</td>
+                            <td class="notes-col">School revision / weak subjects</td>
+                        </tr>
+                        <tr class="break-row">
+                            <td class="time-col">8:30 - 9:00 AM</td>
+                            <td class="activity-col">🍽️ Breakfast</td>
+                            <td class="notes-col">Healthy & nutritious meal</td>
+                        </tr>
+                        <tr class="study-row">
+                            <td class="time-col">9:00 - 11:00 AM</td>
+                            <td class="activity-col">📖 Study Session</td>
+                            <td class="notes-col">ICSE subjects focus + practice</td>
+                        </tr>
+                        <tr class="trading-row">
+                            <td class="time-col">11:00 - 12:00 PM</td>
+                            <td class="activity-col">📊 Forex Learning</td>
+                            <td class="notes-col">Chart analysis + strategy study</td>
+                        </tr>
+                        <tr class="break-row">
+                            <td class="time-col">12:00 - 1:00 PM</td>
+                            <td class="activity-col">🍽️ Lunch + Rest</td>
+                            <td class="notes-col">Meal + short relaxation</td>
+                        </tr>
+                        <tr class="study-row">
+                            <td class="time-col">1:00 - 2:00 PM</td>
+                            <td class="activity-col">🧮 Focused Study</td>
+                            <td class="notes-col">Maths/Science - ICSE boards</td>
+                        </tr>
+                        <tr class="trading-row">
+                            <td class="time-col">2:00 - 3:00 PM</td>
+                            <td class="activity-col">📈 Forex Education</td>
+                            <td class="notes-col">Trading courses + backtesting</td>
+                        </tr>
+                        <tr>
+                            <td class="time-col">3:00 - 4:00 PM</td>
+                            <td class="activity-col">🎨 Hobby Time</td>
+                            <td class="notes-col">Reading / Business planning</td>
+                        </tr>
+                        <tr class="study-row">
+                            <td class="time-col">4:00 - 5:00 PM</td>
+                            <td class="activity-col">📝 Practice Session</td>
+                            <td class="notes-col">ICSE sample papers + revision</td>
+                        </tr>
+                        <tr class="workout-row">
+                            <td class="time-col">5:00 - 6:00 PM</td>
+                            <td class="activity-col">🚶 Light Exercise</td>
+                            <td class="notes-col">Walk / play (aura + fitness)</td>
+                        </tr>
+                        <tr class="trading-row">
+                            <td class="time-col">6:00 - 7:30 PM</td>
+                            <td class="activity-col">📈 NY Trading Session</td>
+                            <td class="notes-col">Live forex trading + learning</td>
+                        </tr>
+                        <tr class="study-row">
+                            <td class="time-col">7:30 - 8:30 PM</td>
+                            <td class="activity-col">📚 Study Session</td>
+                            <td class="notes-col">Weak subjects + concepts</td>
+                        </tr>
+                        <tr class="trading-row">
+                            <td class="time-col">8:30 - 9:00 PM</td>
+                            <td class="activity-col">📊 Trade Review</td>
+                            <td class="notes-col">Journal + performance analysis</td>
+                        </tr>
+                        <tr class="study-row">
+                            <td class="time-col">9:00 - 10:30 PM</td>
+                            <td class="activity-col">📖 Study Session</td>
+                            <td class="notes-col">ICSE revision + practice</td>
+                        </tr>
+                        <tr>
+                            <td class="time-col">10:30 - 10:45 PM</td>
+                            <td class="activity-col">✨ Self Care</td>
+                            <td class="notes-col">Skin/hair care + gratitude</td>
+                        </tr>
+                        <tr class="break-row">
+                            <td class="time-col">11:00 PM</td>
+                            <td class="activity-col">😴 Sleep</td>
+                            <td class="notes-col">Rest & recovery time</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            
+            <!-- Monday to Saturday Schedule -->
+            <div class="day-section">
+                <div class="day-title">📚 MONDAY - SATURDAY SCHEDULE</div>
+                <table class="timetable">
+                    <thead>
+                        <tr>
+                            <th>Time</th>
+                            <th>Activity</th>
+                            <th>Notes</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="time-col">5:00 AM</td>
+                            <td class="activity-col">Wake up</td>
+                            <td class="notes-col">2 warm glasses + soaked almonds</td>
+                        </tr>
+                        <tr class="workout-row">
+                            <td class="time-col">5:10 - 5:40 AM</td>
+                            <td class="activity-col">💪 Workout</td>
+                            <td class="notes-col">Push/pull + abs + stretches</td>
+                        </tr>
+                        <tr>
+                            <td class="time-col">5:40 - 6:20 AM</td>
+                            <td class="activity-col">🛁 Bath + Sandhyavandan</td>
+                            <td class="notes-col">Lukewarm/cold bath + 30 min practice</td>
+                        </tr>
+                        <tr class="study-row">
+                            <td class="time-col">6:20 - 7:30 AM</td>
+                            <td class="activity-col">📚 Study Session</td>
+                            <td class="notes-col">Revision/memory subjects</td>
+                        </tr>
+                        <tr class="break-row">
+                            <td class="time-col">7:30 - 7:50 AM</td>
+                            <td class="activity-col">🍽️ Breakfast & Ready</td>
+                            <td class="notes-col">Quick meal + preparation</td>
+                        </tr>
+                        <tr>
+                            <td class="time-col">8:00 AM - 5:40 PM</td>
+                            <td class="activity-col"><span class="highlight">🏫 School</span></td>
+                            <td class="notes-col">Full academic day</td>
+                        </tr>
+                        <tr class="break-row">
+                            <td class="time-col">5:40 - 6:00 PM</td>
+                            <td class="activity-col">🍃 Freshen Up</td>
+                            <td class="notes-col">Light snack (curd/chana/fruit)</td>
+                        </tr>
+                        <tr class="trading-row">
+                            <td class="time-col">6:00 - 7:30 PM</td>
+                            <td class="activity-col">📈 NY Trading Session</td>
+                            <td class="notes-col">Live forex trading + practice</td>
+                        </tr>
+                        <tr class="study-row">
+                            <td class="time-col">7:30 - 8:30 PM</td>
+                            <td class="activity-col">📚 Study Session</td>
+                            <td class="notes-col">ICSE subjects + homework</td>
+                        </tr>
+                        <tr class="trading-row">
+                            <td class="time-col">8:30 - 9:00 PM</td>
+                            <td class="activity-col">📊 Trade Analysis</td>
+                            <td class="notes-col">Review trades + learning notes</td>
+                        </tr>
+                        <tr class="study-row">
+                            <td class="time-col">9:00 - 10:30 PM</td>
+                            <td class="activity-col">📝 Study + Homework</td>
+                            <td class="notes-col">School work + ICSE prep</td>
+                        </tr>
+                        <tr>
+                            <td class="time-col">10:30 - 10:45 PM</td>
+                            <td class="activity-col">✨ Night Routine</td>
+                            <td class="notes-col">Stretch + face wash + gratitude</td>
+                        </tr>
+                        <tr class="break-row">
+                            <td class="time-col">11:00 PM</td>
+                            <td class="activity-col">😴 Sleep</td>
+                            <td class="notes-col">Minimum 6 hrs till 5 AM</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            
+            <div class="quote-section">
+                <p class="quote-text">Discipline is the bridge between goals and achievements.</p>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
